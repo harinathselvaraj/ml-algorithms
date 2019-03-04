@@ -42,6 +42,10 @@ param = {'booster': 'dart',
 num_round = 50
 bst = xgb.train(param, dtrain, num_round, evals=evallist, early_stopping_rounds=100, verbose_eval=10)
 
+# Feature Importance Tree Plot
+rcParams['figure.figsize'] = 180,150
+xgb.plot_tree(bst, num_trees=2)
+
 # Prediction
 test.drop(['ID_code'], inplace=True, axis=1)
 x_test = test.values
