@@ -1,0 +1,46 @@
+Feature Engineering - 
+---------------------
+
+It is divided in to 3 sections - 
+    1) Feature selection
+    2) Feature extraction
+    3) Adding features through domain expertise
+XGBoost does (1) for you. XGBoost does not do (2)/(3) for you.
+So you still have to do feature engineering yourself. Only a deep learning model could replace feature extraction for you.
+
+
+1) Add Statistical Features
+2) Rounding features to 2 or 3 decimals
+3) SMOTE - will overfit
+4) Poly features - select top few features. around 80%
+5) LGB, No early stopping, No training rounds to 8000, 10000 and 20000
+6) create additional categorical features using DBSCAN
+7) drop one of few features and try again
+8) transforms to all features: log10, log2, exp
+9) row-wise features (max, min, avg, stddev)
+10) feature1 * feature2, feature1 - feature2, feature1 / feature2, mean(feature1,feature2,feature3)
+11) Drop time biased features: time related indices, features that has a big shift during time, etc
+    Create features that are partially independent of time: from date, get "day of week", "weekend" and so on
+12) 
+
+
+Feature Selection - 
+---------------------
+Identifying Feature Importance using RandomForest - 
+
+from sklearn.ensemble import RandomForestClassifier # from xgboost import XGBClassifier
+model = RandomForestClassifier() # XGBClassifier()
+model.fit(X, y)
+pd.DataFrame({'Variable':X.columns,
+              'Importance':model.feature_importances_}).sort_values('Importance', ascending=False)
+
+Why it is important?
+    - Identify the variables with the best predictive power
+    - One column might have missing values. If most of the y values is 1, The model will interpret that the y value is 1. It is wrong. Therefore, raise issues/correct bugs
+    - Update your model with new variables - check the feature importance with and without adding new feature. Sometimes introducing a more relevant feature will probably cut the importance of other features
+    - Compare the feature importance using different models - eg) RandomForest vs XGBoost. ex) using different depths will make a specific variable to be useful when you use a specific depth.
+
+
+
+
+
