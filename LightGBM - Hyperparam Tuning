@@ -1,5 +1,49 @@
 XGBoost Hyperparameter Tuning - 
 
+
+Deal with overfitting
+---------------------
+Use small max_bin
+Use small num_leaves
+Use min_data_in_leaf and min_sum_hessian_in_leaf
+Use bagging by set bagging_fraction and bagging_freq
+Use feature sub-sampling by set feature_fraction
+Use bigger training data
+Try lambda_l1, lambda_l2 and min_gain_to_split for regularization
+Try max_depth to avoid growing deep tree
+
+Higher Accuracy
+---------------
+Use large max_bin 
+Use small learning_rate with large num_iterations
+Use large num_leaves (may cause over-fitting)
+Use bigger training data
+Try dart
+
+
+num_leaves = 2^(max_depth)
+16384 = 2 power(14)
+
+
+Understand the parameters 
+-------------------------
+'num_leaves': 10, - large for overfitting
+'max_bin': 119, - large for overfitting :) (may be slower)
+'min_data_in_leaf': 11,  - large for overfitting. keep it 100 to 1000 for large datasets
+'learning_rate': 0.02,  - keep it minimum for slow training but accurate
+'min_sum_hessian_in_leaf': 0.00245,
+
+# Regularization - makes the output regular instead of over fluctuating. 
+'lambda_l1': 4.972,
+'lambda_l2': 2.276,
+'min_gain_to_split': 0.65,
+
+#This can be increased for overfitting
+'max_depth': 14,
+
+var_63
+
+
 Step 1 : Use the below parameters
 param = {
         silent=False, 
@@ -29,18 +73,6 @@ subsample, which is for each tree the % of rows taken to build the tree. I recom
 colsample_bytree: number of columns used by each tree. In order to avoid some columns to take too much credit for the prediction (think of it like in recommender systems when you recommend the most purchased products and forget about the long tail), take out a good proportion of columns. Values from 0.3 to 0.8 if you have many columns (especially if you did one-hot encoding), or 0.8 to 1 if you only have a few columns.
 
 gamma: usually misunderstood parameter, it acts as a regularization parameter. Either 0, 1 or 5.
-
-Winner Solution
-
-- First XGB to check row order and time based features
-- XGB after paropt and more features
-- L2 ensemble
-- XGB with more time based features
-- L3 ensemble
-- Best XGB
-- Best selected L3 ensemble
-
-
 
 
 

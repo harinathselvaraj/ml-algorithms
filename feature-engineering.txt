@@ -26,12 +26,26 @@ So you still have to do feature engineering yourself. Only a deep learning model
 
 Feature Selection - 
 ---------------------
+
+Interpretation - 
+
+Overall interpretation: determine which variables (or combinations of variables) have the most predictive power, which ones have the least
+Local interpretation: for a given data point and associated prediction, determine which variables (or combinations of variables) explain this specific prediction
+
+Overall Interpretation
+----------------------
 Identifying Feature Importance using RandomForest - 
 
 from sklearn.ensemble import RandomForestClassifier # from xgboost import XGBClassifier
+train = pd.read_csv("../input/train.csv")
+test = pd.read_csv("../input/test.csv")
+y = train.target.values
+train.drop(['ID_code', 'target'], inplace=True, axis=1)
+x = train.values
+
 model = RandomForestClassifier() # XGBClassifier()
-model.fit(X, y)
-pd.DataFrame({'Variable':X.columns,
+model.fit(x, y)
+pd.DataFrame({'Variable':train.columns,
               'Importance':model.feature_importances_}).sort_values('Importance', ascending=False)
 
 Why it is important?
@@ -40,7 +54,32 @@ Why it is important?
     - Update your model with new variables - check the feature importance with and without adding new feature. Sometimes introducing a more relevant feature will probably cut the importance of other features
     - Compare the feature importance using different models - eg) RandomForest vs XGBoost. ex) using different depths will make a specific variable to be useful when you use a specific depth.
 
+Local Interpretation
+--------------------
+    Only for random forest model
+    ----------------------------
+    https://github.com/andosa/treeinterpreter
+    pip install treeinterpreter - it is not working in Kaggle
+
+    from treeinterpreter import treeinterpreter as ti
+    # fit a scikit-learn's regressor model
+    rf = RandomForestRegressor()
+    rf.fit(trainX, trainY)
+
+    prediction, bias, contributions = ti.predict(rf, testX)
+
+    #Prediction is the sum of bias and feature contributions:
+
+    assert(numpy.allclose(prediction, bias + np.sum(contributions, axis=1)))
+    assert(numpy.allclose(rf.predict(testX), bias + np.sum(contributions, axis=1)))
+
+    For Other Models
+    ----------------
+    There is no specific framework for XGBoost
+
+    Run a Random Forest model, and do local interpretations where predictions between your model and the Random Forest model match. It is the solution I chose in a client project where I had a XGBoost model. 
 
 
+    For each individual prediction, we compute the individual contribution of each variable in the prediction with the treeinterpreter package
 
 
