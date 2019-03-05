@@ -17,12 +17,12 @@ train.drop(['ID_code', 'target'], inplace=True, axis=1)
 x = train.values
 
 #Split data for training and validation
-x, x_test, y, y_test = train_test_split(x, y, test_size=0.33, random_state=42, stratify=y)
+x, x_val, y, y_val = train_test_split(x, y, test_size=0.33, random_state=42, stratify=y)
 
 #XGBoost
 dtrain = xgb.DMatrix(x, label=y)
-dtest = xgb.DMatrix(x_test, label=y_test)
-evallist = [(dtest, 'eval'), (dtrain, 'train')]
+dval = xgb.DMatrix(x_val, label=y_val)
+evallist = [(dval, 'eval'), (dtrain, 'train')]
 
 param = {
           'booster': 'dart', 
