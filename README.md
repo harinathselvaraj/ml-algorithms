@@ -1,2 +1,3 @@
 # ml-algorithms
-Code for all ML Algorithms
+Few of my ML Projects :)
+Starter Code for all ML Algorithms
